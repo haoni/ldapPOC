@@ -1,0 +1,11 @@
+/Users/hashimoto/Projects/ldapPOC/bin/Debug/netcoreapp2.2/ldapPOC.deps.json
+/Users/hashimoto/Projects/ldapPOC/bin/Debug/netcoreapp2.2/ldapPOC.runtimeconfig.json
+/Users/hashimoto/Projects/ldapPOC/bin/Debug/netcoreapp2.2/ldapPOC.runtimeconfig.dev.json
+/Users/hashimoto/Projects/ldapPOC/bin/Debug/netcoreapp2.2/ldapPOC.dll
+/Users/hashimoto/Projects/ldapPOC/bin/Debug/netcoreapp2.2/ldapPOC.pdb
+/Users/hashimoto/Projects/ldapPOC/obj/Debug/netcoreapp2.2/ldapPOC.csprojAssemblyReference.cache
+/Users/hashimoto/Projects/ldapPOC/obj/Debug/netcoreapp2.2/ldapPOC.csproj.CoreCompileInputs.cache
+/Users/hashimoto/Projects/ldapPOC/obj/Debug/netcoreapp2.2/ldapPOC.AssemblyInfoInputs.cache
+/Users/hashimoto/Projects/ldapPOC/obj/Debug/netcoreapp2.2/ldapPOC.AssemblyInfo.cs
+/Users/hashimoto/Projects/ldapPOC/obj/Debug/netcoreapp2.2/ldapPOC.dll
+/Users/hashimoto/Projects/ldapPOC/obj/Debug/netcoreapp2.2/ldapPOC.pdb
