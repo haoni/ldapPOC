@@ -8,62 +8,56 @@ namespace ldapPOC
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Hello World!");
+            var userDN = @"user.name@my.domain";
+            var userPasswd = "password@161245";
 
-            var tentativas = new List<Credentials>();
+            var ldapHost = "127.0.0.1";
+            var ldapPort = 389;
 
-            var userdn = "some.user";
-            var userpassword = "psw@123";
+            // Creating an LdapConnection instance 
+            LdapConnection ldapConn = new LdapConnection();
 
-            tentativas.Add(new Credentials("127.0.0.1", "ldap://localhost", 389, userdn, userpassword));
-            tentativas.Add(new Credentials("192.168.22.173", "ldap://domain.server", 389, userdn, userpassword));
+            //Connect function will create a socket connection to the server
+            ldapConn.Connect(ldapHost, ldapPort);
 
-            foreach(var tentativa in tentativas)
+            //Bind function will bind the user object Credentials to the Server
+            ldapConn.Bind(userDN, userPasswd);
+
+            // Searches in the Marketing container and return all child entries just below this container i.e.Single level search
+            var lsc = ldapConn.Search("dc=my,dc=domain", LdapConnection.SCOPE_SUB, "(&(objectClass=user)(sAMAccountName=user.name))", null, false);
+
+            while (lsc.hasMore())
             {
-                try {
-                    using (var cn = new LdapConnection())
-                    {
-                        // connect
-                        cn.Connect(tentativa.IP, 389);
-
-                        //cn.Connect(tentativa.HostName, 389);
-
-                        // bind with an username and password
-                        // this how you can verify the password of an user
-                        cn.Bind(tentativa.UserDn, tentativa.UserPassword);
-
-                        // call ldap op
-                        // cn.Delete("<<userdn>>")
-                        // cn.Add(<<ldapEntryInstance>>)
-                    }
+                LdapEntry nextEntry = null;
+                try
+                {
+                    nextEntry = lsc.next();
                 }
-                catch(Exception ex) {
-                    
-                    Console.WriteLine($"Erro: {tentativa.HostName}:{tentativa.Port} ({tentativa.IP})");
-                    Console.WriteLine($"Usuário: {tentativa.UserDn} Senha: {tentativa.UserPassword}");
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(Environment.NewLine);
+                catch (LdapException e)
+                {
+                    Console.WriteLine("Error: " + e.LdapErrorMessage);
+                    //Exception is thrown, go for next entry
+                    continue;
+                }
 
+                Console.WriteLine("\n" + nextEntry.DN);
+
+                // Get the attribute set of the entry
+                LdapAttributeSet attributeSet = nextEntry.getAttributeSet();
+                System.Collections.IEnumerator ienum = attributeSet.GetEnumerator();
+
+                // Parse through the attribute set to get the attributes and the corresponding values
+                while (ienum.MoveNext())
+                {
+                    LdapAttribute attribute = (LdapAttribute)ienum.Current;
+                    string attributeName = attribute.Name;
+                    string attributeVal = attribute.StringValue;
+                    Console.WriteLine(attributeName + "value:" + attributeVal);
                 }
             }
+
+            //While all the entries are parsed, disconnect   
+            ldapConn.Disconnect();
         }
-    }
-
-    public class Credentials {
-
-        public Credentials(string ip, string hostname, int port, string userdn, string userpassword)
-        {
-            this.IP = ip;
-            this.HostName = hostname;
-            this.Port = port;
-            this.UserDn = userdn;
-            this.UserPassword = userpassword;
-        }
-
-        public string IP { get; private set; }
-        public string HostName { get; private set; }
-        public int Port { get;  private set; }
-        public string UserDn { get; private set; }
-        public string UserPassword { get;  private set; }
     }
 }
